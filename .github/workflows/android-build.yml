@@ -1,0 +1,17 @@
+name: Android Standalone Build
+
+on: workflow_dispatch
+
+jobs:
+  android_build:
+    name: Android Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - uses: bahmutov/npm-install@v1.1.0
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+      - name: Run Expo Build - android
+        run: expo build:android -t app-bundle --non-interactive --no-wait --release-channel publish-android

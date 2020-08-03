@@ -1,0 +1,22 @@
+name: Android Playstore Publish
+
+on: workflow_dispatch
+
+jobs:
+  android_playstore_publish:
+    name: Android Playstore Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - uses: bahmutov/npm-install@v1.1.0
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+      - name: Decrypt app deploy secrets
+        env:
+          APP_DEPLOY_PASSPHRASE: ${{ secrets.APP_DEPLOY_PASSPHRASE}}
+        run: ./scripts/decrypt_app_deploy_secrets.sh
+      - name: Run Expo Upload (to playstore) - latest android build
+        run: expo upload:android --latest --use-submission-service --key
+          $HOME/secrets/playstore_api_key.json --track alpha

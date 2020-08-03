@@ -1,0 +1,20 @@
+name: iOS Standalone Build
+
+on: workflow_dispatch
+
+jobs:
+  ios_expo_build:
+    name: iOS Expo Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2.3.1
+      - uses: bahmutov/npm-install@v1.1.0
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
+          expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+      - name: Run Expo Build - iOS
+        env:
+          EXPO_APPLE_ID: ${{ secrets.APPLE_ID }}
+          EXPO_APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+        run: expo build:ios --non-interactive --no-wait
